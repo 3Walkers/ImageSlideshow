@@ -28,7 +28,7 @@ public protocol ImageSlideshowDelegate: class {
     @objc optional func imageSlideshowDidEndDecelerating(_ imageSlideshow: ImageSlideshow)
 }
 
-/** 
+/**
     Used to represent position of the Page Control
     - hidden: Page Control is hidden
     - insideScrollView: Page Control is inside image slideshow
@@ -186,6 +186,9 @@ open class ImageSlideshow: UIView {
         }
     }
 
+    /// ScrollView Scroll Animation Duration
+    open var slideshowDuration: TimeInterval = 0.0
+
     /// Image change interval, zero stops the auto-scrolling
     open var slideshowInterval = 0.0 {
         didSet {
@@ -237,9 +240,6 @@ open class ImageSlideshow: UIView {
     fileprivate func initialize() {
         autoresizesSubviews = true
         clipsToBounds = true
-        if #available(iOS 13.0, *) {
-            backgroundColor = .systemBackground
-        }
 
         // scroll view configuration
         scrollView.frame = CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.height - 50.0)
@@ -415,7 +415,13 @@ open class ImageSlideshow: UIView {
      */
     open func setScrollViewPage(_ newScrollViewPage: Int, animated: Bool) {
         if scrollViewPage < scrollViewImages.count {
-            scrollView.scrollRectToVisible(CGRect(x: scrollView.frame.size.width * CGFloat(newScrollViewPage), y: 0, width: scrollView.frame.size.width, height: scrollView.frame.size.height), animated: animated)
+            if slideshowDuration > 0 {
+                UIView.animate(withDuration: slideshowDuration) {
+                    self.scrollView.scrollRectToVisible(CGRect(x: self.scrollView.frame.size.width * CGFloat(newScrollViewPage), y: 0, width: self.scrollView.frame.size.width, height: self.scrollView.frame.size.height), animated: false)
+                }
+            } else {
+                scrollView.scrollRectToVisible(CGRect(x: scrollView.frame.size.width * CGFloat(newScrollViewPage), y: 0, width: scrollView.frame.size.width, height: scrollView.frame.size.height), animated: animated)
+            }
             setCurrentPageForScrollViewPage(newScrollViewPage)
             if animated {
                 isAnimating = true
