@@ -423,7 +423,7 @@ open class ImageSlideshow: UIView {
                         self.scrollView.scrollRectToVisible(CGRect(x: self.scrollView.frame.size.width, y: 0, width: self.scrollView.frame.size.width, height: self.scrollView.frame.size.height), animated: false)
                         self.setCurrentPageForScrollViewPage(newScrollViewPage)
                     }
-                }
+                 }
             } else {
                 scrollView.scrollRectToVisible(CGRect(x: scrollView.frame.size.width * CGFloat(newScrollViewPage), y: 0, width: scrollView.frame.size.width, height: scrollView.frame.size.height), animated: animated)
             }
@@ -589,15 +589,14 @@ extension ImageSlideshow: UIScrollViewDelegate {
     }
 
     open func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//        if circular && (scrollViewImages.count > 1) {
-//            let regularContentOffset = scrollView.frame.size.width * CGFloat(images.count)
-//
-//            if scrollView.contentOffset.x >= scrollView.frame.size.width * CGFloat(images.count + 1) {
-//                scrollView.contentOffset = CGPoint(x: scrollView.contentOffset.x - regularContentOffset, y: 0)
-//            } else if scrollView.contentOffset.x <= 0 {
-//                scrollView.contentOffset = CGPoint(x: scrollView.contentOffset.x + regularContentOffset, y: 0)
-//            }
-//        }
+        if circular && (scrollViewImages.count > 1) {
+            let regularContentOffset = scrollView.frame.size.width * CGFloat(images.count)
+            if scrollView.contentOffset.x > scrollView.frame.size.width * CGFloat(images.count + 1) {
+                scrollView.contentOffset = CGPoint(x: scrollView.contentOffset.x - regularContentOffset, y: 0)
+            } else if scrollView.contentOffset.x <= 0 {
+                scrollView.contentOffset = CGPoint(x: scrollView.contentOffset.x + regularContentOffset, y: 0)
+            }
+        }
 
         // Updates the page indicator as the user scrolls (#204). Not called when not dragging to prevent flickers
         // when interacting with PageControl directly (#376).
