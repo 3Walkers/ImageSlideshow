@@ -187,7 +187,7 @@ open class ImageSlideshow: UIView {
     }
 
     /// ScrollView Scroll Animation Duration
-    open var slideshowDuration: TimeInterval = 0.0
+    open var slideshowDuration: TimeInterval = 0.3
 
     /// Image change interval, zero stops the auto-scrolling
     open var slideshowInterval = 0.0 {
