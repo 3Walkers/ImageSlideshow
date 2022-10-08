@@ -446,6 +446,18 @@ open class ImageSlideshow: UIView {
 
         if !circular && page == scrollViewImages.count - 1 {
             nextPage = 0
+        } else if circular && nextPage == scrollViewImages.count {
+            /*
+              出现的问题：3张image，scrollImags就为5张，
+              当处于展示最后一张图片时，page = 3，此时手动滚动到下一张图片，展示为第一张图片，此时 page = 4(计时器重置)
+              当开启下一个时钟时，此时已知page = 4,nextPage = 5，但是实际上展示应该为第二张图片。
+              故此时将nextPage应为2。
+              但是直接设置为2，scrollView会回退到第2张，因为此时是第4张。
+              所以问题应该是scrollViewDidScroll逻辑有误。
+             */
+            
+            // 临时方案，设置到4张图。缺陷是会漏掉一个时钟动画
+            nextPage = min(nextPage, scrollViewImages.count - 1)
         }
 
         setScrollViewPage(nextPage, animated: true)
